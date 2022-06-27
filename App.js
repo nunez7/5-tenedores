@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
 import Navigation from "./app/navigations/Navigation";
+import {firebaseApp} from "./app/utils/firebase";
+
 
 export default function App() {
-  return (
-    <Navigation />
-  );
+  //console.log(auth);
+  return <Navigation />;
 }
