@@ -6,28 +6,46 @@ export default function RegisterForm(){
     return (
         <View style={styles.formContainer}>
             <Input placeholder="Correo electrónico" 
-            containerStyle={styles.inputForm} />
+            containerStyle={styles.inputForm} 
+            rightIcon={
+                <Icon type="material-community"
+                name="at" 
+                iconStyle={styles.iconRight} />
+            }
+            />
             <Input placeholder="Contraseña" 
             containerStyle={styles.inputForm} 
             password={true}
             secureTextEntry={true}
+            rightIcon={
+                <Icon type="material-community"
+                name="eye-outline"
+                iconStyle={styles.iconRight} />
+            }
              />
             <Input placeholder="Repetir contraseña"
             password={true}
             secureTextEntry={true}
-            containerStyle={styles.inputForm} />
+            containerStyle={styles.inputForm} 
+            rightIcon={
+                <Icon type="material-community"
+                name="eye-outline"
+                iconStyle={styles.iconRight} />
+            }
+            />
             <Button title="Unirse"
-            style={styles.btnUnirse} 
-            buttonStyle={styles.btnRegister} />
+            containerStyle={styles.btnUnirse} 
+            buttonStyle={styles.btnRegister} 
+            />
         </View> 
     );
 }
 
 const styles = StyleSheet.create({
     formContainer:{
-        /*flex: 1,
+        flex: 1,
         alignItems: "center",
-        justifyContent: "center",*/
+        justifyContent: "center",
         marginTop: 30,
     },
     inputForm:{
@@ -39,6 +57,9 @@ const styles = StyleSheet.create({
         width: "95%"
     },
     btnRegister:{
-    backgroundColor: "#00a680",
-    }
+        backgroundColor: "#00a680",
+    },
+    iconRight:{
+        color: "#c1c1c1"
+    },
 });
