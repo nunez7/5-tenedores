@@ -23,7 +23,7 @@ export default function Login() {
 
 function CreateAccount() {
   const navigation = useNavigation();
-  console.log(navigation);
+  //console.log(navigation);
 
   return (
     <Text style={styles.txtRegister}>
