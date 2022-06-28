@@ -5,11 +5,14 @@ import { validateEmail } from "../../utils/validations";
 import { size, isEmpty } from "lodash";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
+import {useNavigation} from "@react-navigation/native";
+
 export default function RegisterForm(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [formData, setFormData] = useState(defaulFormValue());
   const { toastRef } = props;
+  const navigation = useNavigation();
 
   const onSubmit = () => {
     //console.log(formData);
@@ -31,7 +34,9 @@ export default function RegisterForm(props) {
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, formData.email, formData.password)
         .then((response) => {
-          console.log(response);
+          //console.log(response);
+          //redireccionamos a la screnn principal
+          navigation.navigate("account");
         })
         .catch(() => {
             //console.log(error);
