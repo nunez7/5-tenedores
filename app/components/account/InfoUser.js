@@ -1,13 +1,16 @@
 import React from "react";
-import { StyleSheet, View, Text, PermissionsAndroid } from "react-native";
+import { StyleSheet, View, Text, PermissionsAndroid, ToastAndroid } from "react-native";
 import { Avatar } from "react-native-elements";
 import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 export default function InfoUser(props) {
   const {
-    userInfo: { photoURL, displayName, email },
+    userInfo: {uid, photoURL, displayName, email },
     toasRef,
   } = props;
+
+  const storage = getStorage();
 
   const changeAvatar = async () => {
     const granted = await PermissionsAndroid.check(
@@ -18,11 +21,28 @@ export default function InfoUser(props) {
             allowsEditing: true,
             aspect:[4,3]
         });
-        console.log(result);
+        if(result.cancelled){
+            toasRef.current.show("Has cerrado la selección de imagenes");
+        }else{
+            uploadImage(result.uri);
+        }
     } else {
       toasRef.current.show("Es necesario aceptar los permisos de la galeria");
     }
   };
+
+  const uploadImage = async (uri) =>{
+    //console.log(uri);
+    const response = await fetch(uri);
+    //console.log(JSON.stringify(response));
+    const blob = await response.blob();
+    //console.log(JSON.stringify(blob));
+    
+    const storageRef = ref(storage, `avatar/${uid}`);
+    uploadBytes(storageRef, blob).then((snapshot) => {
+        toasRef.current.show("Imagen subida");
+    });
+  }
 
   return (
     <View style={styles.viewUserInfo}>
