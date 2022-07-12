@@ -1,13 +1,17 @@
 import React from "react";
-import { StyleSheet, View, Text, PermissionsAndroid, ToastAndroid } from "react-native";
+import { StyleSheet, View, Text, PermissionsAndroid } from "react-native";
 import { Avatar } from "react-native-elements";
-import * as ImagePicker from 'expo-image-picker';
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth, updateProfile } from "firebase/auth";
+import * as ImagePicker from "expo-image-picker";
 
 export default function InfoUser(props) {
+    //console.log(props);
   const {
-    userInfo: {uid, photoURL, displayName, email },
+    userInfo: { uid, photoURL, displayName, email },
     toasRef,
+    setLoading,
+    setLoadingText,
   } = props;
 
   const storage = getStorage();
@@ -17,32 +21,58 @@ export default function InfoUser(props) {
       PermissionsAndroid.PERMISSIONS.CAMERA
     );
     if (granted) {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect:[4,3]
-        });
-        if(result.cancelled){
-            toasRef.current.show("Has cerrado la selección de imagenes");
-        }else{
-            uploadImage(result.uri);
-        }
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
+      if (result.cancelled) {
+        toasRef.current.show("Has cerrado la selección de imagenes");
+      } else {
+        uploadImage(result.uri);
+      }
     } else {
       toasRef.current.show("Es necesario aceptar los permisos de la galeria");
     }
   };
+  //Subir imagen al storage
+  const uploadImage = async (uri) => {
+    setLoadingText("Actualizando avatar");
+    setLoading(true);
 
-  const uploadImage = async (uri) =>{
     //console.log(uri);
     const response = await fetch(uri);
     //console.log(JSON.stringify(response));
     const blob = await response.blob();
     //console.log(JSON.stringify(blob));
-    
+
     const storageRef = ref(storage, `avatar/${uid}`);
     uploadBytes(storageRef, blob).then((snapshot) => {
-        toasRef.current.show("Imagen subida");
+      toasRef.current.show("Imagen guardada");
+      updatePhotoUrl();
     });
-  }
+  };
+  //Descargar photo en perfil
+  const updatePhotoUrl = () => {
+    const starsRef = ref(storage, `avatar/${uid}`);
+    // Get the download URL
+    getDownloadURL(starsRef)
+      .then(async (response) => {
+        //console.log(response);
+        const auth = getAuth();
+        //Actualizar imagen
+        //console.log(response);
+        updateProfile(auth.currentUser, {
+            photoURL: response
+        })
+          .then(() => {
+            setLoading(false);
+          })
+          .catch((error) => {console.log("Error");});
+      })
+      .catch((error) => {
+        toasRef.current.show("Error al actualizar el avatar");
+      });
+  };
 
   return (
     <View style={styles.viewUserInfo}>
