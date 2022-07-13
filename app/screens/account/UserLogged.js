@@ -6,6 +6,7 @@ import Toast from "react-native-easy-toast";
 import { getAuth, signOut } from "firebase/auth";
 
 import InfoUser from "../../components/account/InfoUser";
+import AccountOptions from "../../components/account/AccountOptions";
 
 import Loading from "../../components/Loading";
 
@@ -34,7 +35,8 @@ export default function UserLogged() {
                       setLoading={setLoading}
                       setLoadingText={setLoadingText}
                       />}
-      <Text>AccountOptions</Text>
+      
+      <AccountOptions userInfo={userInfo} toasRef={toasRef}/>
 
       <Button title="Cerrar sesión" 
       buttonStyle={styles.btnCloseSesion}
