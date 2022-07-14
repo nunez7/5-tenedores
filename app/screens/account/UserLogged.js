@@ -13,6 +13,7 @@ import Loading from "../../components/Loading";
 export default function UserLogged() {
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
+  const [reloadUserInfo, setReloadUserInfo] = useState(false);
   const toasRef = useRef();
   const [userInfo, setUserInfo] = useState(null);
 
@@ -24,7 +25,9 @@ export default function UserLogged() {
       //console.log(user);
       setUserInfo(user);
     }) ();
-  }, [])
+    //Se ejecuta cada que reload sea true
+    setReloadUserInfo(false);
+  }, [reloadUserInfo])
   
 
   return (
@@ -36,7 +39,9 @@ export default function UserLogged() {
                       setLoadingText={setLoadingText}
                       />}
       
-      <AccountOptions userInfo={userInfo} toasRef={toasRef}/>
+      <AccountOptions userInfo={userInfo} 
+      toasRef={toasRef}
+      setReloadUserInfo={setReloadUserInfo} />
 
       <Button title="Cerrar sesión" 
       buttonStyle={styles.btnCloseSesion}

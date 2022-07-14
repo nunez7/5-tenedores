@@ -1,16 +1,41 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 import { map } from "lodash";
 import Modal from "./Modal";
+import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
 
 export default function AccountOptions(props) {
-  const { userInfo, toasRef } = props;
-  const [showModal, setShowModal] = useState(true);
+  const { userInfo, toasRef , setReloadUserInfo} = props;
+  const [showModal, setShowModal] = useState(false);
+  const [renderComponent, setRenderComponent] = useState(null);
 
   const selectedComponent = (key) => {
-    console.log("CLIC ");
-    console.log(key);
+    switch (key) {
+      case "displayName":
+        setRenderComponent(
+        <ChangeDisplayNameForm 
+            displayName={userInfo.displayName}
+            setShowModal= {setShowModal}
+            toasRef={toasRef}
+            setReloadUserInfo={setReloadUserInfo}
+        />
+        );
+        setShowModal(true);
+        break;
+      case "email":
+        setRenderComponent(<Text>Cambiando email</Text>);
+        setShowModal(true);
+        break;
+      case "password":
+        setRenderComponent(<Text>Cambiando password</Text>);
+        setShowModal(true);
+        break;
+      default:
+        setRenderComponent(null);
+        setShowModal(false);
+        break;
+    }
   };
 
   const menuOptions = generateOptions(selectedComponent);
@@ -22,17 +47,28 @@ export default function AccountOptions(props) {
           key={i}
           containerStyle={styles.menuItem}
           onPress={menu.onPress}
-          >
-          <Icon type={menu.iconType} name={menu.iconNameLeft} color={menu.iconColorLeft} />
+        >
+          <Icon
+            type={menu.iconType}
+            name={menu.iconNameLeft}
+            color={menu.iconColorLeft}
+          />
           <ListItem.Content>
             <ListItem.Title>{menu.title}</ListItem.Title>
           </ListItem.Content>
-          <Icon type={menu.iconType} name={menu.iconNameRight} color={menu.iconColorRight} />
+          <Icon
+            type={menu.iconType}
+            name={menu.iconNameRight}
+            color={menu.iconColorRight}
+          />
         </ListItem>
       ))}
-      <Modal isVisible={showModal} setIsVisible={setShowModal} >
-        <Text>Hola mundo</Text>
-      </Modal>
+
+      {renderComponent && (
+        <Modal isVisible={showModal} setIsVisible={setShowModal}>
+          {renderComponent}
+        </Modal>
+      )}
     </View>
   );
 }
