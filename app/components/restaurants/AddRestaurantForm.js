@@ -20,6 +20,7 @@ export default function AddRestaurantForm(props){
                 setAddress={setAddress}
                 setDescription={setDescription}
             />
+            <UploadImage />
             <Button 
                 title="Crear restaurante"
                 onPress={addRestaurant}
@@ -31,7 +32,7 @@ export default function AddRestaurantForm(props){
 
 function FormAdd(props){
     const {setName, setAddress, setDescription} = props;
-    
+
     return (
         <View style={styles.viewForm}>
             <Input 
@@ -49,6 +50,25 @@ function FormAdd(props){
                 multiline={true}
                 inputContainerStyle={styles.textarea}
                 onChange={(e)=> setDescription(e.nativeEvent.text)}
+            />
+        </View>
+    )
+}
+
+function UploadImage(){
+
+    const imageSelect = () =>{
+        console.log("Images...");
+    }
+
+    return (
+        <View style={styles.viewImage}>
+            <Icon 
+                type="material-community"
+                name="camera"
+                color="#7a7a7a"
+                containerStyle={styles.containerIcon}
+                onPress={imageSelect}
             />
         </View>
     )
@@ -74,5 +94,19 @@ const styles = StyleSheet.create({
     btnAddRestaurant:{
         backgroundColor: "#00a680",
         margin: 20,
+    },
+    viewImage:{
+        flexDirection: "row",
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 30
+    },
+    containerIcon:{
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 10,
+        height: 70,
+        width: 70,
+        backgroundColor: "#e3e3e3"
     }
 });
