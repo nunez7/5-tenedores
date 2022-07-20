@@ -6,7 +6,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {firebaseApp} from "../../utils/firebase";
 
 
-export default function Restaurants(){
+export default function Restaurants(props){
+    const {navigation } = props;
+
     const [user, setUser] = useState(null);
     //verificamos el estado del user
     useEffect(() => {
@@ -29,6 +31,7 @@ export default function Restaurants(){
                 name="plus"
                 color="#00a680"
                 containerStyle={styles.btnContainer}
+                onPress={() => navigation.navigate("addrestaurant")}
             />
             )}
         </View>
