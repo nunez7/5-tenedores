@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, ScrollView, View, PermissionsAndroid } from "react-native";
+import { StyleSheet, ScrollView, View, PermissionsAndroid, Alert } from "react-native";
 import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
-import { map, size } from "lodash";
+import { map, size, filter } from "lodash";
 
 export default function AddRestaurantForm(props) {
   const { toastRef, setIsLoading, navigation } = props;
@@ -90,6 +90,29 @@ function UploadImage(props) {
     }
   };
 
+  //Eliminar la imagen del array
+  const removeImage = (image) =>{
+    Alert.alert(
+        "Eliminar imagen",
+    "¿Estás seguro que quieres eliminar la imagen?",
+    [
+        {
+            text:"Cancel",
+            style: "cancel"
+        },
+        {
+            text:"Eliminar",
+            onPress: () =>{
+                setImageSelected(
+                    filter(imageSelected, (imageUrl) => imageUrl!== image)
+                )
+            }
+        }
+    ],
+    {cancelable: false}
+    );
+  }
+
   return (
     <View style={styles.viewImage}>
       {size(imageSelected) < 5 && (
@@ -108,6 +131,7 @@ function UploadImage(props) {
           source={{
             uri: imageRestaurant,
           }}
+          onPress={() => removeImage(imageRestaurant)}
         />
       ))}
     </View>
