@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, ScrollView, View, PermissionsAndroid, Alert } from "react-native";
+import { StyleSheet, ScrollView, View, PermissionsAndroid, Alert, Dimensions } from "react-native";
 import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import { map, size, filter } from "lodash";
+
+const widthScreen = Dimensions.get("window").width;
 
 export default function AddRestaurantForm(props) {
   const { toastRef, setIsLoading, navigation } = props;
@@ -19,6 +21,7 @@ export default function AddRestaurantForm(props) {
 
   return (
     <ScrollView style={styles.scrollView}>
+      <ImageRestaurant imagenRestaurant={imageSelected[0]} />
       <FormAdd
         setName={setName}
         setAddress={setAddress}
@@ -36,6 +39,23 @@ export default function AddRestaurantForm(props) {
       />
     </ScrollView>
   );
+}
+
+function ImageRestaurant(props){
+    const {imagenRestaurant} = props;
+
+    return (
+        <View style={styles.viewPhoto}>
+            <Image 
+            source={
+                imagenRestaurant 
+                ? {uri: imagenRestaurant} 
+                : require("../../../assets/img/no-image.png") 
+            }
+            style={{width: widthScreen, height: 200}}
+            />
+        </View>
+    );
 }
 
 function FormAdd(props) {
@@ -178,4 +198,9 @@ const styles = StyleSheet.create({
     height: 70,
     marginRight: 10,
   },
+  viewPhoto:{
+    alignItems: "center",
+    height: 200,
+    marginBottom: 20,
+  }
 });
