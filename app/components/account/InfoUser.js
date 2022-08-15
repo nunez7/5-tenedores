@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, View, Text, PermissionsAndroid } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { Avatar } from "react-native-elements";
+import { Camera, CameraType } from "expo-camera";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth, updateProfile } from "firebase/auth";
 import * as ImagePicker from "expo-image-picker";
@@ -17,21 +18,24 @@ export default function InfoUser(props) {
   const storage = getStorage();
 
   const changeAvatar = async () => {
-    const granted = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.CAMERA
-    );
-    if (granted) {
+    const cameraPermission = await Camera.requestCameraPermissionsAsync();
+       
+    if (cameraPermission.status === "granted") {
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
       });
+
       if (result.cancelled) {
-        toasRef.current.show("Has cerrado la selección de imagenes");
+        toasRef.current.show("Has cerrado la selección de imagenes", 2000);
       } else {
         uploadImage(result.uri);
       }
     } else {
-      toasRef.current.show("Es necesario aceptar los permisos de la galeria");
+      toasRef.current.show(
+        "Es necesario aceptar los permisos de la galeria.",
+        3000
+      );
     }
   };
   //Subir imagen al storage

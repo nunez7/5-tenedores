@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { StyleSheet, ScrollView, View, PermissionsAndroid, Alert, Dimensions , Text} from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Alert,
+  Dimensions,
+  Text,
+} from "react-native";
 import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
+import { Camera, CameraType } from "expo-camera";
 import { map, size, filter } from "lodash";
 import Modal from "../account/Modal";
 
@@ -28,7 +36,7 @@ export default function AddRestaurantForm(props) {
         setName={setName}
         setAddress={setAddress}
         setDescription={setDescription}
-        setIsVisibleMap = {setIsVisibleMap}
+        setIsVisibleMap={setIsVisibleMap}
       />
       <UploadImage
         toastRef={toastRef}
@@ -45,21 +53,21 @@ export default function AddRestaurantForm(props) {
   );
 }
 
-function ImageRestaurant(props){
-    const {imagenRestaurant} = props;
+function ImageRestaurant(props) {
+  const { imagenRestaurant } = props;
 
-    return (
-        <View style={styles.viewPhoto}>
-            <Image 
-            source={
-                imagenRestaurant 
-                ? {uri: imagenRestaurant} 
-                : require("../../../assets/img/no-image.png") 
-            }
-            style={{width: widthScreen, height: 200}}
-            />
-        </View>
-    );
+  return (
+    <View style={styles.viewPhoto}>
+      <Image
+        source={
+          imagenRestaurant
+            ? { uri: imagenRestaurant }
+            : require("../../../assets/img/no-image.png")
+        }
+        style={{ width: widthScreen, height: 200 }}
+      />
+    </View>
+  );
 }
 
 function FormAdd(props) {
@@ -77,12 +85,12 @@ function FormAdd(props) {
         containerStyle={styles.input}
         onChange={(e) => setAddress(e.nativeEvent.text)}
         rightIcon={{
-            type: "material-community",
-            name: "google-maps",
-            color: "#c2c2c2",
-            onPress: () =>{
-                setIsVisibleMap(true);
-            }
+          type: "material-community",
+          name: "google-maps",
+          color: "#c2c2c2",
+          onPress: () => {
+            setIsVisibleMap(true);
+          },
         }}
       />
       <Input
@@ -96,65 +104,63 @@ function FormAdd(props) {
 }
 
 //Creando el mapa
-function Map(props){
-    const {isVisibleMap, setIsVisibleMap} = props;
+function Map(props) {
+  const { isVisibleMap, setIsVisibleMap } = props;
 
-    return (
-        <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
-            <Text>Mapa</Text>
-        </Modal>
-    );
+  return (
+    <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
+      <Text>Mapa</Text>
+    </Modal>
+  );
 }
 
 function UploadImage(props) {
   const { toastRef, setImageSelected, imageSelected } = props;
 
   const imageSelect = async () => {
-    const resultPermissions = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.CAMERA
-    );
+      const cameraPermission = await Camera.requestCameraPermissionsAsync();
+      
+      if (cameraPermission.status === "granted") {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
 
-    if (!resultPermissions) {
-      toastRef.current.show(
-        "Es necesario aceptar los permisos de la galeria, si los has rechazado tienes que ir a ajustes.",
-        3000
-      );
-    } else {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-      });
-
-      if (result.cancelled) {
-        toastRef.current.show("Has cerrado la selección de imagenes", 2000);
+        if (result.cancelled) {
+          toastRef.current.show("Has cerrado la selección de imagenes", 2000);
+        } else {
+          setImageSelected([...imageSelected, result.uri]);
+        }
       } else {
-        setImageSelected([...imageSelected, result.uri]);
+        toastRef.current.show(
+          "Es necesario aceptar los permisos de la galeria, si los has rechazado tienes que ir a ajustes.",
+          3000
+        );
       }
-    }
   };
 
   //Eliminar la imagen del array
-  const removeImage = (image) =>{
+  const removeImage = (image) => {
     Alert.alert(
-        "Eliminar imagen",
-    "¿Estás seguro que quieres eliminar la imagen?",
-    [
+      "Eliminar imagen",
+      "¿Estás seguro que quieres eliminar la imagen?",
+      [
         {
-            text:"Cancel",
-            style: "cancel"
+          text: "Cancel",
+          style: "cancel",
         },
         {
-            text:"Eliminar",
-            onPress: () =>{
-                setImageSelected(
-                    filter(imageSelected, (imageUrl) => imageUrl!== image)
-                )
-            }
-        }
-    ],
-    {cancelable: false}
+          text: "Eliminar",
+          onPress: () => {
+            setImageSelected(
+              filter(imageSelected, (imageUrl) => imageUrl !== image)
+            );
+          },
+        },
+      ],
+      { cancelable: false }
     );
-  }
+  };
 
   return (
     <View style={styles.viewImage}>
@@ -221,9 +227,9 @@ const styles = StyleSheet.create({
     height: 70,
     marginRight: 10,
   },
-  viewPhoto:{
+  viewPhoto: {
     alignItems: "center",
     height: 200,
     marginBottom: 20,
-  }
+  },
 });
