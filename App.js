@@ -9,6 +9,7 @@ LogBox.ignoreAllLogs(["Setting a timer",
 "ViewPropTypes will be removed from React Native",
 "AsyncStorage has been extracted from react-native core and will be removed in a future release",
 "PermissionsAndroid module works only for Android platform.",
+"AsyncStorage has been extracted from react-native core and will be removed in a future release.",
 ]);
 
 export default function App() {
