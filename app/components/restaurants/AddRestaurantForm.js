@@ -28,9 +28,15 @@ export default function AddRestaurantForm(props) {
   const [locationRestaurant, setLocationRestaurant] = useState(null);
 
   const addRestaurant = () => {
-    console.log("Ok");
-    console.log(imageSelected);
-    console.log(locationRestaurant);
+    if(!name || !address || !description){
+      toastRef.current.show("Todos los campos son obligatorios");
+    }else if(size(imageSelected)==0){
+      toastRef.current.show("El restaurante debe tener al menos una foto");
+    }else if(!locationRestaurant){
+      toastRef.current.show("Tienes que localizar el restaurante en el mapa");
+    }else{
+      console.log("OK");
+    }
   };
 
   return (
@@ -41,6 +47,7 @@ export default function AddRestaurantForm(props) {
         setAddress={setAddress}
         setDescription={setDescription}
         setIsVisibleMap={setIsVisibleMap}
+        locationRestaurant={locationRestaurant}
       />
       <UploadImage
         toastRef={toastRef}
@@ -79,7 +86,11 @@ function ImageRestaurant(props) {
 }
 
 function FormAdd(props) {
-  const { setName, setAddress, setDescription, setIsVisibleMap } = props;
+  const { setName, 
+    setAddress, 
+    setDescription, 
+    setIsVisibleMap,
+    locationRestaurant } = props;
 
   return (
     <View style={styles.viewForm}>
@@ -95,7 +106,7 @@ function FormAdd(props) {
         rightIcon={{
           type: "material-community",
           name: "google-maps",
-          color: "#c2c2c2",
+          color: locationRestaurant ? "#00a680": "#c2c2c2",
           onPress: () => {
             setIsVisibleMap(true);
           },
