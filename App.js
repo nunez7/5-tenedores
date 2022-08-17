@@ -13,8 +13,6 @@ LogBox.ignoreAllLogs(["Setting a timer",
 "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
 ]);
 
-if(!global.btoa) global.btoa = encode;
-if(!global.atob) global.atob = decode;
 
 export default function App() {
   //console.log(auth);

@@ -9,9 +9,8 @@ import MapView from "react-native-maps";
 import uuidv4 from "random-uuid-v4";
 import Modal from "../account/Modal";
 
-import { getFirestore } from "firebase/firestore";
 import { firebaseApp } from "../../utils/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getFirestore } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -21,7 +20,6 @@ const widthScreen = Dimensions.get("window").width;
 
 export default function AddRestaurantForm(props) {
   const { toastRef, setIsLoading, navigation } = props;
-
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
@@ -60,10 +58,10 @@ export default function AddRestaurantForm(props) {
             createBy: user.uid,
           });
           setIsLoading(false);
-          console.log("Ok");
+          navigation.navigate("restaurants");
         } catch (e) {
           setIsLoading(false);
-          toastRef.current.show("Error al subir el restaurante");
+          toastRef.current.show("Error al guardar el restaurante, intente más tarde");
         }
       });
     }
