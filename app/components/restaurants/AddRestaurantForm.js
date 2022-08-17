@@ -9,7 +9,13 @@ import MapView from "react-native-maps";
 import uuidv4 from "random-uuid-v4";
 import Modal from "../account/Modal";
 
+import { getFirestore } from "firebase/firestore";
+import { firebaseApp } from "../../utils/firebase";
+import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+
+const db = getFirestore(firebaseApp);
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -35,8 +41,30 @@ export default function AddRestaurantForm(props) {
       //console.log("OK");
       setIsLoading(true);
       uploadImageStorage().then((response) => {
-        console.log(response);
-        setIsLoading(false);
+        //console.log(response);
+        //User
+        const auth = getAuth();
+        const user = auth.currentUser;
+        // Add a new document with a generated id.
+        try {
+          addDoc(collection(db, "restaurants"), {
+            name: name,
+            address: address,
+            description: description,
+            images: response,
+            location: locationRestaurant,
+            rating: 0,
+            ratingTotal: 0,
+            quantityVoting: 0,
+            createAt: new Date(),
+            createBy: user.uid,
+          });
+          setIsLoading(false);
+          console.log("Ok");
+        } catch (e) {
+          setIsLoading(false);
+          toastRef.current.show("Error al subir el restaurante");
+        }
       });
     }
   };
