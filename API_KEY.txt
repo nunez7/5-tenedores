@@ -1,0 +1,7 @@
+AIzaSyB-8sNxObjtj4xFG_Njw3QFgC7afCPkQhk
+
+Accessing credentials for felix77 in project 5-tenedores
+Google Certificate Fingerprint:     33:2B:F1:1D:D3:61:1E:9B:B5:80:9A:ED:38:5C:15:92:9B:F3:CF:92
+Google Certificate Hash (SHA-1):    332BF11DD3611E9BB5809AED385C15929BF3CF92
+Google Certificate Hash (SHA-256):  2144951716C0183B8EC142FE77C55C8A2015088CA697258E10EE3F03EE40C67E
+Facebook Key Hash:                  MyvxHdNhHpu1gJrtOFwVkpvzz5I=

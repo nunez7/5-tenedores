@@ -18,9 +18,16 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "edu.mx.felix.tenedores",
       "supportsTablet": true
     },
     "android": {
+      "package":"edu.mx.felix.tenedores",
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyB-8sNxObjtj4xFG_Njw3QFgC7afCPkQhk"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
